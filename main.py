@@ -153,33 +153,51 @@ class MainFrame(tk.Tk):
 
 	# method to make a card enter diffrent card number to add successfully
 	def card(self,card_number):
-		dim_color = '#46504C'
-		self.deadline_container[card_number] = tk.Frame(self.deadline_container_frame, height = 50, width = 780, bg = dim_color)
+		dim_color   = '#36403C'
+		close_color = '#A6504C'
+		near_color  = '#46509C'
+		safe_color  = '#46A09C'
+		time_left   = self.calculate_time_left(card_number+self.current_show_start-1)
+		card_title  = self.card_db[str(self.current_show_start+card_number-1)][0]
+		if len(card_title)>20:
+			card_title = card_title[:17]+'...'
+		elif len(card_title) == 0:
+			card_title = 'NO TITLE'
+		card_date   = self.card_db[str(self.current_show_start+card_number-1)][2]
+		card_time   = self.card_db[str(self.current_show_start+card_number-1)][3]
+
+		self.deadline_container[card_number] = tk.Frame(self.deadline_container_frame, height = 50, width = 780)
 		self.deadline_container[card_number].place(x = 110, y = 14*card_number+50*(card_number-1))
+		if time_left<=0:
+			self.deadline_container[card_number]['bg'] = dim_color
+		elif time_left<=1440:
+			self.deadline_container[card_number]['bg'] = close_color
+		elif time_left<=4320:
+			self.deadline_container[card_number]['bg'] = near_color
+		else :
+			self.deadline_container[card_number]['bg'] = safe_color
+
 
 		tk.Button(self.deadline_container[card_number],text = 'Details', font = ('Courier',12), 
 			activebackground= '#76798C', width = 8, height = 1, bg = '#76798C',
 			command = lambda : self.details_handler(self.current_show_start+card_number)).place(x = 660, y = 12)
 
-		card_title = self.card_db[str(self.current_show_start+card_number-1)][0]
-		if len(card_title)>20:
-			card_title = card_title[:17]+'...'
-		elif len(card_title) == 0:
-			card_title = 'NO TITLE'
-		card_date  = self.card_db[str(self.current_show_start+card_number-1)][2]
-		card_time  = self.card_db[str(self.current_show_start+card_number-1)][3]
+		card_label1 = tk.Label(self.deadline_container[card_number], fg = '#ffffff', font = ('Courier', 16),
+			text = str(self.current_show_start+card_number)+'.', bg = self.deadline_container[card_number]['bg'])
+		card_label1.place(x = 20, y = 10)
 
-		tk.Label(self.deadline_container[card_number], bg = dim_color, fg = '#ffffff', font = ('Courier', 16),
-			text = str(self.current_show_start+card_number)+'.').place(x = 20, y = 10)
+		card_label2 = tk.Label(self.deadline_container[card_number], fg = '#ffffff', font = ('Courier', 16),
+			text = card_title, bg = self.deadline_container[card_number]['bg'])
+		card_label2.place(x = 70, y = 10)
 
-		tk.Label(self.deadline_container[card_number], bg = dim_color, fg = '#ffffff', font = ('Courier', 16),
-			text = card_title).place(x = 70, y = 10)
+		card_laebl3 = tk.Label(self.deadline_container[card_number], fg = '#ffffff', font = ('Courier', 16),
+			text = card_date, bg = self.deadline_container[card_number]['bg'])
+		card_laebl3.place(x = 400, y = 10)
 
-		tk.Label(self.deadline_container[card_number], bg = dim_color, fg = '#ffffff', font = ('Courier', 16),
-			text = card_date).place(x = 400, y = 10)
+		card_laebl4 = tk.Label(self.deadline_container[card_number], fg = '#ffffff', font = ('Courier', 16),
+			text = card_time, bg = self.deadline_container[card_number]['bg'])
+		card_laebl4.place(x = 550, y = 10)
 
-		tk.Label(self.deadline_container[card_number], bg = dim_color, fg = '#ffffff', font = ('Courier', 16),
-			text = card_time).place(x = 550, y = 10)
 
 		# tk.Label(self.deadline_container[card_number])
 
